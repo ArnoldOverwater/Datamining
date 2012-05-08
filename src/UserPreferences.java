@@ -9,13 +9,14 @@ public class UserPreferences {
 	
 	public int arrayPointer;
 	
-	public UserPreferences(){
+	public UserPreferences(int userId){
+		this.userId = userId;
 		itemIds = new int[1000];
 		ratings = new double[1000];
 		arrayPointer = 0;
 	}
 	
-	public void setItem(int itemId, double rating){
+	public void setElement(int itemId, double rating){
 		int search = Arrays.binarySearch(itemIds, itemId);
 		if(search < 0){
 			itemIds[arrayPointer] = itemId;
@@ -28,12 +29,12 @@ public class UserPreferences {
 	
 	public String toString(){
 		
-		String list = ""+userId;
+		StringBuilder builder = new StringBuilder(Integer.toString(userId));
 		
-		for(int i = 0; i< arrayPointer;i++){
-			list += "("+itemIds[i]+","+ratings[i]+")";
+		for(int i = 0; i < arrayPointer; i++){
+			builder.append("(").append(itemIds[i]).append(",").append(ratings[i]).append(")");
 		}
 		
-		return list; 
+		return builder.toString(); 
 	}
 }
