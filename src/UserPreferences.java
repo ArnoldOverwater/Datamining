@@ -3,17 +3,17 @@ import java.util.Arrays;
 
 public class UserPreferences {
 	
-	public int userId;	
-	public int[] itemIds;
-	public double[] ratings;
+	private int userId;	
+	private int[] itemIds;
+	private double[] ratings;
 	
-	public int arrayPointer;
+//	public int arrayPointer;
 	
 	public UserPreferences(int userId){
 		this.userId = userId;
-		itemIds = new int[1000];
-		ratings = new double[1000];
-		arrayPointer = 0;
+		itemIds = new int[0];
+		ratings = new double[0];
+//		arrayPointer = 0;
 	}
 	
 	public void setElement(int itemId, double rating){

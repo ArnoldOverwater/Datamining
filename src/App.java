@@ -1,19 +1,20 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.StringTokenizer;
+import java.util.TreeMap;
 
 
 public class App {
 
 
 	public static void main(String[] args) throws FileNotFoundException {
-		UserPreferences[] UP = new UserPreferences[1000];
-		ItemPreferences[] IP = new ItemPreferences[1000];
-		int upArrayPointer = 0, ipArrayPointer = 0;
-		upArrayPointer = readFile(UP, upArrayPointer);
+		
+		Map<Integer, UserPreferences> treeMap = new TreeMap<Integer, UserPreferences>();
+
+		readFile(treeMap);
+		/*
 		for(int i = 0; i < upArrayPointer; i++){
 			System.out.println(UP[i]);
 		}
@@ -23,39 +24,28 @@ public class App {
 			IP[i].sort();
 			System.out.println(IP[i]);
 		}
+		*/
 	}
 	
 	
 	
-	public static int readFile(UserPreferences[] UP, int arrayPointer) throws FileNotFoundException{
+	public static void readFile(Map<Integer, UserPreferences> map) throws FileNotFoundException{
 		File file  = new File("data.txt");
 		Scanner sc = new Scanner(file);
 		while(sc.hasNextLine()){
 			StringTokenizer st = new StringTokenizer(sc.nextLine(), ",");
-			UserPreferences up = new UserPreferences(Integer.parseInt(st.nextToken()));
-			int search = Arrays.binarySearch(UP, 0, arrayPointer, up, new Comparator<UserPreferences>(){
-				@Override
-				public int compare(UserPreferences arg0, UserPreferences arg1) {
-					if(arg0.userId < arg1.userId)
-						return -1;
-					else if (arg0.userId > arg1.userId)
-						return 1;
-					else
-						return 0;
-				}
-			});
-			if (search < 0){
-				UP[arrayPointer++] = up;
-			}else{
-				up = UP[search];
+			int userId = Integer.parseInt(st.nextToken());
+			UserPreferences up = map.get(userId);
+			if(up == null){
+				up = new UserPreferences(userId);
+				map.put(userId, up);
 			}
 			up.setElement(Integer.parseInt(st.nextToken()), Double.parseDouble(st.nextToken()));
 		}
-		return arrayPointer;
 	}
 	
 	
-	
+	/*
 	public static int convertUPtoIP(UserPreferences[] UP, int upArrayPointer, ItemPreferences[] IP, int ipArrayPointer){
 		for(int i = 0; i < upArrayPointer; i++){
 			UserPreferences up = UP[i];
@@ -111,5 +101,5 @@ public class App {
 		}
 		quickSortIP(IP, endIndex - largerPointer, endIndex);
 	}
-
+*/
 }
