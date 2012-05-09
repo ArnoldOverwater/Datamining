@@ -18,7 +18,9 @@ public class App {
 			System.out.println(UP[i]);
 		}
 		ipArrayPointer = convertUPtoIP(UP, upArrayPointer, IP, ipArrayPointer);
+		quickSortIP(IP, 0, ipArrayPointer);
 		for(int i = 0; i < ipArrayPointer; i++){
+			IP[i].sort();
 			System.out.println(IP[i]);
 		}
 	}
@@ -79,6 +81,35 @@ public class App {
 			}
 		}
 		return ipArrayPointer;
+	}
+	
+	
+	
+	public static void quickSortIP(ItemPreferences[] IP, int startIndex, int endIndex){
+		int size = endIndex - startIndex;
+		if(size <= 1){
+			return;
+		}
+		ItemPreferences[] smaller = new ItemPreferences[size], larger = new ItemPreferences[size];
+		ItemPreferences pivot = IP[endIndex - 1];
+		int smallerPointer = 0, largerPointer = 0;
+		for(int i = startIndex; i < endIndex; i++){
+			if(IP[i].itemId < pivot.itemId){
+				smaller[smallerPointer++] = IP[i];
+			}else{
+				larger[largerPointer++] = IP[i];
+			}
+		}
+		int arrayPointer = startIndex;
+		for(int i = 0; i < smallerPointer; i++){
+			IP[arrayPointer++] = smaller[i];
+		}
+		quickSortIP(IP, startIndex, startIndex + smallerPointer);
+		IP[arrayPointer++] = pivot;
+		for(int i = 0; i < largerPointer; i++){
+			IP[arrayPointer++] = larger[i];
+		}
+		quickSortIP(IP, endIndex - largerPointer, endIndex);
 	}
 
 }
