@@ -14,10 +14,10 @@ public class App {
 		Map<Integer, UserPreferences> treeMap = new TreeMap<Integer, UserPreferences>();
 
 		readFile(treeMap);
-		/*
-		for(int i = 0; i < upArrayPointer; i++){
-			System.out.println(UP[i]);
+		for(UserPreferences up : treeMap.values()){
+			System.out.println(up);
 		}
+		/*
 		ipArrayPointer = convertUPtoIP(UP, upArrayPointer, IP, ipArrayPointer);
 		quickSortIP(IP, 0, ipArrayPointer);
 		for(int i = 0; i < ipArrayPointer; i++){

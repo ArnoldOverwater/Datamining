@@ -1,4 +1,4 @@
-import java.util.Arrays;
+
 
 
 public class UserPreferences {
@@ -17,21 +17,56 @@ public class UserPreferences {
 	}
 	
 	public void setElement(int itemId, double rating){
-		int search = Arrays.binarySearch(itemIds, itemId);
-		if(search < 0){
-			itemIds[arrayPointer] = itemId;
-			ratings[arrayPointer] = rating;
-			arrayPointer++;
-		}else{
-			ratings[search] = rating;		
+		int beginIndex = 0, halfIndex = 0, endIndex = itemIds.length;
+		if(itemIds.length > 0) {
+			while(true){
+				halfIndex = (endIndex - beginIndex) / 2 + beginIndex;
+				if(itemId < itemIds[halfIndex]){
+					if(endIndex - beginIndex <= 1){
+						break;
+					}
+					endIndex = halfIndex;
+				}else if(itemId > itemIds[halfIndex]){
+					if(endIndex - beginIndex <= 1){
+						halfIndex++;
+						break;
+					}
+					beginIndex = halfIndex;
+				}else{
+					ratings[halfIndex] = rating;
+					return;
+				}
+			}
 		}
+		int[] newItemIds = new int[itemIds.length + 1];
+		double[] newRatings = new double[ratings.length + 1];
+		System.arraycopy(itemIds, 0, newItemIds, 0, halfIndex);
+		newItemIds[halfIndex] = itemId;
+		System.arraycopy(itemIds, halfIndex, newItemIds, halfIndex + 1, itemIds.length - halfIndex);
+		System.arraycopy(ratings, 0, newRatings, 0, halfIndex);
+		newRatings[halfIndex] = rating;
+		System.arraycopy(ratings, halfIndex, newRatings, halfIndex + 1, ratings.length - halfIndex);
+		itemIds = newItemIds;
+		ratings = newRatings;
+	}
+	
+	public int getUserId(){
+		return userId;
+	}
+	
+	public int[] getItemIds(){
+		return itemIds;
+	}
+	
+	public double[] getRatings(){
+		return ratings;
 	}
 	
 	public String toString(){
 		
 		StringBuilder builder = new StringBuilder(Integer.toString(userId));
 		
-		for(int i = 0; i < arrayPointer; i++){
+		for(int i = 0; i < itemIds.length; i++){
 			builder.append("(").append(itemIds[i]).append(",").append(ratings[i]).append(")");
 		}
 		
