@@ -11,13 +11,21 @@ public class App {
 
 	public static void main(String[] args) throws FileNotFoundException {
 		
-		Map<Integer, UserPreferences> treeMap = new TreeMap<Integer, UserPreferences>();
+		Map<Integer, UserPreferences> treeMapUP = new TreeMap<Integer, UserPreferences>();
+		Map<Integer, ItemPreferences> treeMapIP = new TreeMap<Integer, ItemPreferences>(); 
 
-		readFile(treeMap);
-		for(UserPreferences up : treeMap.values()){
+		readFile(treeMapUP, treeMapIP);
+		System.out.println("Op basis van users\n");
+		for(UserPreferences up : treeMapUP.values()){
 			System.out.println(up);
 		}
-		for(UserPreferences up : treeMap.values()){
+		System.out.println("\nOp basis van items\n");
+		for(ItemPreferences ip : treeMapIP.values()){
+			System.out.println(ip);
+		}
+		
+		/*
+		for(UserPreferences up : treeMapUP.values()){
 			testUserHasItem(up, 101);
 			testUserHasItem(up, 103);
 			testUserHasItem(up, 106);
@@ -34,18 +42,25 @@ public class App {
 	
 	
 	
-	public static void readFile(Map<Integer, UserPreferences> map) throws FileNotFoundException{
+	public static void readFile(Map<Integer, UserPreferences> mapUP ,Map<Integer, ItemPreferences> mapIT ) throws FileNotFoundException{
 		File file  = new File("data.txt");
 		Scanner sc = new Scanner(file);
 		while(sc.hasNextLine()){
 			StringTokenizer st = new StringTokenizer(sc.nextLine(), ",");
 			int userId = Integer.parseInt(st.nextToken());
-			UserPreferences up = map.get(userId);
+			int itemId = Integer.parseInt(st.nextToken());
+			double rating = Double.parseDouble(st.nextToken());
+			UserPreferences up = mapUP.get(userId);
+			ItemPreferences it = mapIT.get(itemId);
 			if(up == null){
 				up = new UserPreferences(userId);
-				map.put(userId, up);
+				mapUP.put(userId, up);
+			}if(it == null){
+				it = new ItemPreferences(itemId);
+				mapIT.put(itemId, it);
 			}
-			up.setElement(Integer.parseInt(st.nextToken()), Double.parseDouble(st.nextToken()));
+			up.setElement(itemId, rating);
+			it.setElement(userId, rating);
 		}
 	}
 	

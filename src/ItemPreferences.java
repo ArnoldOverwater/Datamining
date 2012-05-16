@@ -1,4 +1,4 @@
-import java.util.Arrays;
+
 
 
 public class ItemPreferences {
@@ -11,78 +11,89 @@ public class ItemPreferences {
 	
 	public ItemPreferences(int itemId){
 		this.itemId = itemId;
-		userIds = new int[1000];
-		ratings = new double[1000];
-		arrayPointer = 0;
+		userIds = new int[0];
+		ratings = new double[0];
 	}
 	
 	public void setElement(int userId, double rating){
-		int search = Arrays.binarySearch(userIds, itemId);
-		if(search < 0){
-			userIds[arrayPointer] = userId;
-			ratings[arrayPointer] = rating;
-			arrayPointer++;
-		}else{
-			ratings[search] = rating;		
-		}
-	}
-	
-	public void sort(){
-		quickSort(0, arrayPointer);
-	}
-	
-	private void quickSort(int startIndex, int endIndex){
-		int size = endIndex - startIndex;
-		if (size <= 1){
-			return;
-		}
-		int[] smallerUserIds = new int[size], largerUserIds = new int[size];
-		double[] smallerRatings = new double[size], largerRatings = new double[size];
-		int pivotUserId = userIds[endIndex - 1];
-		double pivotRating = ratings[endIndex - 1];
-		int smallerPointer = 0, largerPointer = 0;
-		for(int i = startIndex; i < endIndex - 1; i++){
-			if(userIds[i] < pivotUserId){
-				smallerUserIds[smallerPointer] = userIds[i];
-				smallerRatings[smallerPointer] = ratings[i];
-				smallerPointer++;
-			}else if(userIds[i] > pivotUserId){
-				largerUserIds[largerPointer] = userIds[i];
-				largerRatings[largerPointer] = ratings[i];
-				largerPointer++;
-			}else if(ratings[i] < pivotRating){
-				smallerUserIds[smallerPointer] = userIds[i];
-				smallerRatings[smallerPointer] = ratings[i];
-				smallerPointer++;
-			}else{
-				largerUserIds[largerPointer] = userIds[i];
-				largerRatings[largerPointer] = ratings[i];
-				largerPointer++;
+		int beginIndex = 0, halfIndex = 0, endIndex = userIds.length;
+		if(userIds.length > 0){
+			while(true){
+				halfIndex = (endIndex - beginIndex) / 2 + beginIndex;
+				if(userId < userIds[halfIndex]){
+					if(endIndex - beginIndex <= 1){
+						break;
+					}
+					endIndex = halfIndex;	
+				}else if(userId > userIds[halfIndex]){
+					if(endIndex - beginIndex <= 1){
+						halfIndex++;
+						break;
+					}
+					beginIndex = halfIndex;
+				}else{
+					ratings[halfIndex] = rating;
+					return;
+				}
 			}
 		}
-		int newArrayPointer = startIndex;
-		for(int i = 0; i < smallerPointer; i++){
-			userIds[newArrayPointer] = smallerUserIds[i];
-			ratings[newArrayPointer] = smallerRatings[i];
-			newArrayPointer++;
+		int[] newUserIds = new int[userIds.length + 1];
+		double[] newRatings = new double[ratings.length + 1];
+		System.arraycopy(userIds, 0, newUserIds, 0, userIds.length);
+		newUserIds[halfIndex] = userId;
+		System.arraycopy(userIds, halfIndex, newUserIds, halfIndex + 1, userIds.length - halfIndex);
+		System.arraycopy(ratings, 0, newRatings, 0, ratings.length);
+		newRatings[halfIndex] = rating;
+		System.arraycopy(ratings, halfIndex, newRatings, halfIndex + 1, ratings.length - halfIndex);
+		userIds = newUserIds;
+		ratings = newRatings;
+	}
+	
+	public double getRatingForUser(int userId){
+		int beginIndex = 0, halfIndex, endIndex = userIds.length;
+		if(userIds.length > 0){
+			while(true){
+				halfIndex = (endIndex - beginIndex) / 2 + beginIndex;
+				if(userId < userIds[halfIndex]){
+					if(endIndex - beginIndex <= 1){
+						return -1.0;
+					}
+					endIndex = halfIndex;
+				}else if(userId > userIds[halfIndex]){
+					if(endIndex - beginIndex <= 1){
+						return -1.0;
+					}
+					beginIndex = halfIndex;
+				}else{
+					return ratings[halfIndex];
+				}
+			}
+		}else{
+			return -1.0;
 		}
-		quickSort(startIndex, startIndex + smallerPointer);
-		userIds[newArrayPointer] = pivotUserId;
-		ratings[newArrayPointer] = pivotRating;
-		newArrayPointer++;
-		for(int i = 0; i < largerPointer; i++){
-			userIds[newArrayPointer] = largerUserIds[i];
-			ratings[newArrayPointer] = largerRatings[i];
-			newArrayPointer++;
-		}
-		quickSort(endIndex - largerPointer, endIndex);
+	}
+	
+	public boolean hasItem(int userId){
+		return getRatingForUser(userId) >= 0.0;
+	}
+	
+	public int getItemId(){
+		return itemId;
+	}
+	
+	public int[] getUserIds(){
+		return userIds;
+	}
+	
+	public double[] getRatings(){
+		return ratings;
 	}
 	
 	public String toString(){
 		
 		StringBuilder builder = new StringBuilder(Integer.toString(itemId));
 		
-		for(int i = 0; i < arrayPointer; i++){
+		for(int i = 0; i < userIds.length; i++){
 			builder.append("(").append(userIds[i]).append(",").append(ratings[i]).append(")");
 		}
 		
