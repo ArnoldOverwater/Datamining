@@ -50,6 +50,34 @@ public class UserPreferences {
 		ratings = newRatings;
 	}
 	
+	public double getRatingForItem(int itemId) {
+		int beginIndex = 0, halfIndex, endIndex = itemIds.length;
+		if(itemIds.length > 0) {
+			while(true){
+				halfIndex = (endIndex - beginIndex) / 2 + beginIndex;
+				if(itemId < itemIds[halfIndex]){
+					if(endIndex - beginIndex <= 1){
+						return -1.0;
+					}
+					endIndex = halfIndex;
+				}else if(itemId > itemIds[halfIndex]){
+					if(endIndex - beginIndex <= 1){
+						return -1.0;
+					}
+					beginIndex = halfIndex;
+				}else{
+					return ratings[halfIndex];
+				}
+			}
+		}else{
+			return -1.0;
+		}
+	}
+	
+	public boolean hasItem(int itemId) {
+		return getRatingForItem(itemId) >= 0.0;
+	}
+	
 	public int getUserId(){
 		return userId;
 	}

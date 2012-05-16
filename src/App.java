@@ -17,6 +17,11 @@ public class App {
 		for(UserPreferences up : treeMap.values()){
 			System.out.println(up);
 		}
+		for(UserPreferences up : treeMap.values()){
+			testUserHasItem(up, 101);
+			testUserHasItem(up, 103);
+			testUserHasItem(up, 106);
+		}
 		/*
 		ipArrayPointer = convertUPtoIP(UP, upArrayPointer, IP, ipArrayPointer);
 		quickSortIP(IP, 0, ipArrayPointer);
@@ -44,6 +49,10 @@ public class App {
 		}
 	}
 	
+	
+	public static void testUserHasItem(UserPreferences up, int itemId) {
+		System.out.printf("Has user %d item %d: %b\n", up.getUserId(), itemId, up.hasItem(itemId));
+	}
 	
 	/*
 	public static int convertUPtoIP(UserPreferences[] UP, int upArrayPointer, ItemPreferences[] IP, int ipArrayPointer){
