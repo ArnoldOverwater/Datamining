@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.StringTokenizer;
@@ -15,14 +16,18 @@ public class App {
 		Map<Integer, ItemPreferences> treeMapIP = new TreeMap<Integer, ItemPreferences>(); 
 
 		readFile(treeMapUP, treeMapIP);
+	
 		System.out.println("Op basis van users\n");
 		for(UserPreferences up : treeMapUP.values()){
 			System.out.println(up);
 		}
+		/*
 		System.out.println("\nOp basis van items\n");
 		for(ItemPreferences ip : treeMapIP.values()){
 			System.out.println(ip);
 		}
+		*/
+		Recommendation.getRecommendation(treeMapUP);
 		
 		/*
 		for(UserPreferences up : treeMapUP.values()){
