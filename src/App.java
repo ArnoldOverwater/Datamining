@@ -24,6 +24,13 @@ public class App {
 			System.out.println(ip);
 		}
 		
+		System.out.println(Pearson.pearson(treeMapUP.get(1), treeMapUP.get(2)));
+		System.out.println(Pearson.pearson(treeMapUP.get(2), treeMapUP.get(1)));
+		System.out.println(Pearson.pearson(treeMapUP.get(1), treeMapUP.get(3)));
+		System.out.println(Pearson.pearson(treeMapUP.get(3), treeMapUP.get(1)));
+		System.out.println(Pearson.pearson(treeMapUP.get(2), treeMapUP.get(3)));
+		System.out.println(Pearson.pearson(treeMapUP.get(3), treeMapUP.get(2)));
+		
 		/*
 		for(UserPreferences up : treeMapUP.values()){
 			testUserHasItem(up, 101);
