@@ -71,9 +71,24 @@ public class Pearson {
 	}
 	
 	private static int[] exclusion(int[] itemIds1, int[] itemIds2) {
-		// TODO Gets all items that are in itemIds2, but not in itemIds1
-		//      (Items from this method will be recommended to the user who has itemIds1)
-		return null;
+		int[] exclusion = new int[itemIds1.length < itemIds2.length ? itemIds2.length : itemIds1.length];
+		int index1 = 0, index2 = 0, indexResult = 0;
+		while (index1 < itemIds1.length && index2 < itemIds2.length) {
+			if (itemIds1[index1] < itemIds2[index2]) {
+				index1++;
+			} else if (itemIds1[index1] > itemIds2[index2]) {
+				exclusion[indexResult++] = itemIds2[index2++];
+			} else if (itemIds1[index1] == itemIds2[index2]) {
+				index1++;
+				index2++;
+			}
+		}
+		while (index2 < itemIds2.length) {
+			exclusion[indexResult++] = itemIds2[index2++];
+		}
+		int[] result = new int[indexResult];
+		System.arraycopy(exclusion, 0, result, 0, indexResult);
+		return result;
 	}
 
 }
