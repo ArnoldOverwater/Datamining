@@ -60,7 +60,7 @@ public class Pearson {
 				index1++;
 			} else if (itemIds1[index1] > itemIds2[index2]) {
 				index2++;
-			} else if (itemIds1[index1] == itemIds2[index2]) {
+			} else {
 				intersection[indexResult++] = itemIds1[index1++];
 				index2++;
 			}
@@ -78,7 +78,7 @@ public class Pearson {
 				index1++;
 			} else if (itemIds1[index1] > itemIds2[index2]) {
 				exclusion[indexResult++] = itemIds2[index2++];
-			} else if (itemIds1[index1] == itemIds2[index2]) {
+			} else {
 				index1++;
 				index2++;
 			}
