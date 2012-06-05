@@ -24,7 +24,8 @@ public class App {
 			System.out.println(ip);
 		}
 		
-		System.out.println(Pearson.getRecommendations(treeMapUP.get(3), treeMapUP));
+		System.out.println("\nRecommendations voor user 1\n");
+		System.out.println(Pearson.getRecommendations(treeMapUP.get(1), treeMapUP));
 		
 		/*
 		for(UserPreferences up : treeMapUP.values()){
@@ -45,10 +46,10 @@ public class App {
 	
 	
 	public static void readFile(Map<Integer, UserPreferences> mapUP ,Map<Integer, ItemPreferences> mapIT ) throws FileNotFoundException{
-		File file  = new File("data.txt");
+		File file  = new File("u.data");
 		Scanner sc = new Scanner(file);
 		while(sc.hasNextLine()){
-			StringTokenizer st = new StringTokenizer(sc.nextLine(), ",");
+			StringTokenizer st = new StringTokenizer(sc.nextLine(), "\t");
 			int userId = Integer.parseInt(st.nextToken());
 			int itemId = Integer.parseInt(st.nextToken());
 			double rating = Double.parseDouble(st.nextToken());

@@ -1,23 +1,45 @@
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 
 public class Pearson {
 	
-	public static Map<Integer, Double> getRecommendations(UserPreferences user, Map<Integer, UserPreferences> mapUP) {
+	public static List<Map.Entry<Integer, Double>> getRecommendations(UserPreferences user, Map<Integer, UserPreferences> mapUP) {
+		Map<Integer, Double> pearsonsRatings = getPearsonsRatings(user, mapUP);
+		List<Map.Entry<Integer, Double>> entryList = new ArrayList<Entry<Integer, Double>>(pearsonsRatings.entrySet());
+		Collections.sort(entryList, new Comparator<Map.Entry<Integer, Double>>() {
+			@Override
+			public int compare(Entry<Integer, Double> o1, Entry<Integer, Double> o2) {
+				if (o1.getValue() > o2.getValue())
+					return -1;
+				else if (o1.getValue() < o2.getValue())
+					return 1;
+				else
+					return 0;
+			}
+		});
+		return entryList;
+	}
+	
+	public static Map<Integer, Double> getPearsonsRatings(UserPreferences user, Map<Integer, UserPreferences> mapUP) {
 		Map<Integer, Double> pearsons = getAllPearson(user, mapUP.values());
 		int[] itemIds = user.getItemIds();
-		Map<Integer, Double> recommendations = new TreeMap<Integer, Double>();
+		Map<Integer, Double> pearsonsRatings = new TreeMap<Integer, Double>();
 		for (int userId : mapUP.keySet()) {
 			UserPreferences otherUser = mapUP.get(userId);
 			int[] items = exclusion(itemIds, otherUser.getItemIds());
 			for (int item : items) {
 				double pearsonRating = otherUser.getRatingForItem(item) * pearsons.get(userId);
-				recommendations.put(item, pearsonRating + (recommendations.containsKey(item) ? recommendations.get(item) : 0));
+				pearsonsRatings.put(item, pearsonRating + (pearsonsRatings.containsKey(item) ? pearsonsRatings.get(item) : 0));
 			}
 		}
-		return recommendations;
+		return pearsonsRatings;
 	}
 	
 	public static Map<Integer, Double> getAllPearson(UserPreferences user, Collection<UserPreferences> userCollection) {
