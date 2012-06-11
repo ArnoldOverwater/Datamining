@@ -102,12 +102,8 @@ public class Pearson {
 		return result;
 	}
 	
-	public static Map<Integer, Pearson> getAllPearson(UserPreferences user, Collection<UserPreferences> userCollection) {
-		Map<Integer, Pearson> pearsons = new TreeMap<Integer, Pearson>();
-		for (UserPreferences up : userCollection) {
-			pearsons.put(up.getUserId(), new Pearson(user, up));
-		}
-		return pearsons;
+	public static Pearson[] getAllPearson(UserPreferences[] UP) {
+		
 	}
 
 }
