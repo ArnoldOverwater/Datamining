@@ -1,5 +1,7 @@
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 
@@ -18,6 +20,8 @@ public class Pearson {
 	public double pearson;
 	
 	public Pearson(UserPreferences user1, UserPreferences user2) {
+		userId1 = user1.getUserId();
+		userId2 = user2.getUserId();
 		intersection(user1, user2);
 		if (itemIds.length == user1.getItemIds().length && itemIds.length == user2.getItemIds().length) {
 			return;
@@ -102,8 +106,51 @@ public class Pearson {
 		return result;
 	}
 	
-	public static Pearson[] getAllPearson(UserPreferences[] UP) {
-		
+	public static Map<Integer, Map<Integer, Pearson>> getAllPearson(UserPreferences[] UP, double minPearson) {
+		Map<Integer, Map<Integer, Pearson>> pearsons = new TreeMap<Integer, Map<Integer, Pearson>>();
+		for (int i = 0; i < UP.length; i++) {
+			for (int j = i + 1; j < UP.length; j++) {
+				Pearson p = new Pearson(UP[i], UP[j]);
+				if (p.pearson >= minPearson || p.pearson <= (-minPearson)) {
+					Map<Integer, Pearson> map;
+					if (pearsons.containsKey(p.userId1)) {
+						map = pearsons.get(p.userId1);
+					} else {
+						map = new TreeMap<Integer, Pearson>();
+						pearsons.put(p.userId1, map);
+					}
+					map.put(p.userId2, p);
+				}
+			}
+		}
+		return pearsons;
+	}
+	
+	public static List<Pearson> getPearsonsFor(int userId, Map<Integer, Map<Integer, Pearson>> pearsons) {
+		List<Pearson> list = new ArrayList<Pearson>();
+		for (Entry<Integer, Map<Integer, Pearson>> entry : pearsons.entrySet()) {
+			if (entry.getKey() >= userId) {
+				break;
+			}
+			list.add(entry.getValue().get(userId));
+		}
+		list.addAll(pearsons.get(userId).values());
+		return list;
+	}
+	
+	public static Pearson getPearsonFor(int userId1, int userId2, Map<Integer, Map<Integer, Pearson>> pearsons) {
+		if (userId1 < userId2 && pearsons.containsKey(userId1)) {
+			Map<Integer, Pearson> map = pearsons.get(userId1);
+			if (map.containsKey(userId2)) {
+				return map.get(userId2);
+			}
+		} else if (userId1 > userId2 && pearsons.containsKey(userId2)) {
+			Map<Integer, Pearson> map = pearsons.get(userId2);
+			if (map.containsKey(userId1)) {
+				return map.get(userId1);
+			}
+		}
+		return null;
 	}
 
 }
