@@ -17,7 +17,12 @@ public class Pearson {
 	
 	public double[] ratings2;
 	
+	public double[] weightsUserId1;
+	
+	public double[] weightsUserId2;
+	
 	public double pearson;
+	
 	
 	public Pearson(UserPreferences user1, UserPreferences user2) {
 		userId1 = user1.getUserId();
@@ -27,6 +32,32 @@ public class Pearson {
 			return;
 		}
 		pearson = calculatePearson();
+		calculateWeights();
+		
+	}
+	
+	public int indexOfItemId(int itemId) {
+		int beginIndex = 0, halfIndex, endIndex = itemIds.length;
+		if(itemIds.length > 0) {
+			while(true){
+				halfIndex = (endIndex - beginIndex) / 2 + beginIndex;
+				if(itemId < itemIds[halfIndex]){
+					if(endIndex - beginIndex <= 1){
+						return -1;
+					}
+					endIndex = halfIndex;
+				}else if(itemId > itemIds[halfIndex]){
+					if(endIndex - beginIndex <= 1){
+						return -1;
+					}
+					beginIndex = halfIndex;
+				}else{
+					return halfIndex;
+				}
+			}
+		}else{
+			return -1;
+		}
 	}
 
 	private void intersection(UserPreferences user1, UserPreferences user2) {
@@ -59,6 +90,8 @@ public class Pearson {
 		itemIds = new int[indexResult];
 		ratings1 = new double[indexResult];
 		ratings2 = new double[indexResult];
+		weightsUserId1 = new double[indexResult];
+		weightsUserId2 = new double[indexResult];
 		System.arraycopy(intersectItemIds, 0, itemIds, 0, indexResult);
 		System.arraycopy(intersectRatings1, 0, ratings1, 0, indexResult);
 		System.arraycopy(intersectRatings2, 0, ratings2, 0, indexResult);
@@ -83,6 +116,13 @@ public class Pearson {
 			return 0;
 		else
 			return numerator / denominator;
+	}
+	
+	public void calculateWeights(){
+		for(int i = 0; i < itemIds.length; i++){
+			weightsUserId1[i] = pearson * ratings1[i];
+			weightsUserId2[i] = pearson * ratings2[i];
+		}
 	}
 	
 	private static int[] exclusion(int[] itemIds1, int[] itemIds2) {
@@ -132,9 +172,12 @@ public class Pearson {
 			if (entry.getKey() >= userId) {
 				break;
 			}
-			list.add(entry.getValue().get(userId));
+			if (entry.getValue().containsKey(userId))
+				list.add(entry.getValue().get(userId));
 		}
-		list.addAll(pearsons.get(userId).values());
+		Map<Integer, Pearson> entry = pearsons.get(userId);
+		if (entry != null)
+			list.addAll(entry.values());
 		return list;
 	}
 	
@@ -152,5 +195,7 @@ public class Pearson {
 		}
 		return null;
 	}
+	
+
 
 }

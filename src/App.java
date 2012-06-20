@@ -15,19 +15,28 @@ public class App {
 		Map<Integer, ItemPreferences> treeMapIP = new TreeMap<Integer, ItemPreferences>(); 
 
 		readFile(treeMapUP, treeMapIP);
-	
 		System.out.println("Op basis van users\n");
+		
+		UserPreferences[] UP = new UserPreferences[treeMapUP.size()];  
+		
+		int index = 0;
 		for(UserPreferences up : treeMapUP.values()){
-			System.out.println(up);
+			UP[index++] = up;
 		}
+		
 		/*
 		System.out.println("\nOp basis van items\n");
 		for(ItemPreferences ip : treeMapIP.values()){
 			System.out.println(ip);
 		}
 		*/
-		Recommendation.getRecommendation(treeMapUP);
 		
+		Map<Integer, Map<Integer, Pearson>> pearsons = Pearson.getAllPearson(UP, 0.60);
+
+		
+		Recommendation.getRecommendation(1, pearsons);
+		
+		/*
 		System.out.println("\nRecommendations voor user 1\n");
 		System.out.println(Pearson.getRecommendations(treeMapUP.get(1), treeMapUP));
 		
