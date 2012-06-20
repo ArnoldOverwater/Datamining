@@ -1,6 +1,9 @@
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 
@@ -39,13 +42,22 @@ public class Recommendation {
 			}
 		}
 		
-		Map<Integer, Double> totals = new TreeMap<Integer, Double>();
+		ValueComparotar valueComparator = new ValueComparotar();
+		Map<Integer, Double> totals = new TreeMap<Integer, Double>(valueComparator);
+		valueComparator.map = totals;
 		
 		for (Integer itemId : totalPearson.keySet()) {
 			double sum = totalWeight.get(itemId) / totalPearson.get(itemId);
 			totals.put(itemId, sum);
-			System.out.println(itemId+" - "+sum);
 		}
+		
+		
+		int counter = 0;
+		for(Integer entry: totals.keySet()){
+			
+			System.out.println(entry +" - " + totals.get(entry));
+		}
+		
 		
 		/*
 		int[] recommendations = new int[3];
@@ -60,6 +72,24 @@ public class Recommendation {
 
 			}
 		}*/
+	}
+	
+	static class ValueComparotar implements Comparator<Integer>{
+
+		Map<Integer, Double> map;
+		
+		@Override
+		public int compare(Integer index1, Integer index2) {
+			// TODO Auto-generated method stub
+			if(map.get(index1) < map.get(index2)){
+				return 1;
+			}else if(map.get(index1) == map.get(index2)){
+				return 0;
+			}else{
+				return -1;
+			}
+		}
+		
 	}
 
 }
